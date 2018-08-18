@@ -19,55 +19,55 @@ Tăng cường bảo vệ
 
 ## Ai sẽ sử dụng Token Based Authentication?
 
-Any major API or web application that you've come across has most likely used tokens. Applications like Facebook, Twitter, Google+, GitHub, and so many more use tokens.
+Phần lớn API hoặc ứng dụng web nào bạn biết đến dường như đều sử dụng các tokens . Một số ứng dụng như Fa và rất nhiều cebook, Twitter, Google+, GitHub, và nhiều ứng dụng khác sử dụng tokens
 
-Let's take a look at exactly how it works. 
+Hãy xem cách thức hoạt dộng của chúng.
 
-## Why Tokens Came Around
+## Tại sao phải chấp nhận ToKen
 
-Before we can see how token based authentication works and its benefits, we have to look at the way authentication has been done in the past.
+Trước khi chúng ta muốn xem cách hoạt động của token based authentication và ưu điểm của nó, chúng ta cần xem cách thức hoạt động authentication mà bạn đã làm trước đây. 
 
 ### Server Based Authentication (The Traditional Method)
+### Máy chủ Based Authentication ( Máy chủ truyền thống)
 
-> Since the HTTP protocol is _stateless_, this means that if we authenticate a user with a username and password, then on the next request, our application won't know who we are. We would have to authenticate again.
+> Vì giao thức HTTP là _stateless_, nghĩa là nếu chúng ta authenticate một tài khoản với tên tài khoản và mật khẩu, tiếp theo là những yêu cầu, ứng dụng sẽ không nhận biết được chúng ta là ai. Chúng ta sẽ xác thực lại authenticate.
 
-The traditional way of having our applications remember who we are is to **store the user logged in information on the server**. This can be done in a few different ways on the session, usually in memory or stored on the disk.
+Phương pháp truyền thống để ứng dụng có thể ghi nhớ được chúng ta là ai **lưu trữ thông tin người dùng đã đăng nhập trên máy chủ** sẽ có một vài cách hiện khác nhau trong session, thường được lưu trữ trên đĩa hoặc trong bộ nhớ
+Dưới dây là một biểu đồ quy trình làm việc của máy chủ  based authentication sẽ như thế nào:
+Như trang web, ứng dụng, và sự phát triển của ứng dụng di động đã tới, phương pháp xác thực authentication đã cho thấy những vấn đề, đặc biệt là khả năng mở rộng.
 
-Here is a graph of how a server based authentication workflow would look:
+## Những vấn đề với máy chủ Based Authentication
 
-As the web, applications, and the rise of the mobile application have come about, this method of authentication has shown problems, especially in scalability.
+Một vài vấn đề chính phát sinh với phương thức xác thực này.
 
-## The Problems with Server Based Authentication
+**Sessions**: Mỗi khi người dùng xác thực, máy chủ sẽ tạo ra một bản ghi ở đâu đó trên mmáy chủ của chúng tôi
 
-A few major problems arose with this method of authentication.
+**Scalability**: Vì sessions được lưu trữ trong bộ nhớ, nó cung cấp vấn đề với khả năng mở rộng. Vì những nhà cung cấp các dịch vụ đám mây bắt đầu tạo các bản sao máy chủ để xử lí việc tải ứng dụng, sẽ có những thông tin quan trọng trong bộ nhớ session sẽ giới hạn khả năng mở rộng của chúng ta.
 
-**Sessions**: Every time a user is authenticated, the server will need to create a record somewhere on our server. This is usually done in memory and when there are many users authenticating, the overhead on your server increases.
+**CORS**: Khi chúng ta muốn mở rộng ứng dụng để cho phép dữ liệu có thể chạy trên nhiều thiết bị điện thoại, chúng tôi cảm thấy lo lắng về việc chia sẻ tài nguyên gốc(CORS). Khi sử dụng các cuộc gọi AJAX để lấy tài nguyên từ một domain khác(từ điện thoại đến máy chủ API), chúng ta có thể gặp vấn đề với những requests bị cấm.
 
-**Scalability**: Since sessions are stored in memory, this provides problems with scalability. As our cloud providers start replicating servers to handle application load, having vital information in session memory will limit our ability to scale.
+**CSRF**: Chúng tôi cũng sẽ bảo vệ chống lại [cross-site request forgery][1] (CSRF). Người dùng sẽ đễ bị CSRF tấn công bởi vì họ có thể đã xác thực với một trang web của ngân hàng và điều này có thể được tận dụng khi chúng ta truy cập các trang khác.
 
-**CORS**: As we want to expand our application to let our data be used across multiple mobile devices, we have to worry about cross-origin resource sharing (CORS). When using AJAX calls to grab resources from another domain (mobile to our API server), we could run into problems with forbidden requests.
+Với những vấn đề này, khả năng mở rộng là vấn đề chính, điều này tùy thuộc vào những cố gắng khác nhau.
 
-**CSRF**: We will also have protection against [cross-site request forgery][1] (CSRF). Users are susceptible to CSRF attacks since they can already be authenticated with say a banking site and this could be taken advantage of when visiting other sites.
+## Các hoạt động dựa trên Token 
 
-With these problems, scalability being the main one, it made sense to try a different approach. 
+Token based authentication là **stateless**. Chúng tôi không lưu trữ bất kì thông tin nào về người dùng trên máy chủ hoặc trong session.
 
-## How Token Based Works
+Khái niệm này quan tâm đến nhiều vấn đề mà phải lưu trữ trên máy chủ.
 
-Token based authentication is **stateless**. We are not storing any information about our user on the server or in a session.
+>Không có  thông tin session này có nghĩa là ứng dụng của  bạn có thể sử dụng và cài thêm nhiều máy khi cần thiết mà không phải lo lắng người dùng sẽ đăng nhập ở đâu.
 
-This concept alone takes care of many of the problems with having to store information on the server.
+Mặc dù việc triển khai có thể thay đổi, nhưng sẽ có những ý chính như sau:
 
-> No session information means your application can scale and add more machines as necessary without worrying about where a user is logged in.
-
-Although this implementation can vary, the gist of it is as follows:
-
-1. User Requests Access with Username / Password
-2. Application validates credentials
-3. Application provides a signed token to the client
-4. Client stores that token and sends it along with every request
-5. Server verifies token and responds with data
+1. Quyền truy cập yêu cầu đối với người dùng là tài khoản đăng nhập/ mật khẩu
+2. Ứng dụng xác thực thông tin đăng nhập
+3. Ứng dụng cung cấp token cho khách hàng đã đăng kí
+4. Khách hàng lưu lại token và gửi cùng với mọi request
+5. Máy chủ sẽ xác minh token và gửi lại phản hồi
 
 **Every single request will require the token**. This token should be sent in the HTTP header so that we keep with the idea of stateless HTTP requests. We will also need to set our server to accept requests from all domains using `Access-Control-Allow-Origin: *`. What's interesting about designating `*` in the ACAO header is that it does not allow requests to supply credentials like HTTP authentication, client-side SSL certificates, or cookies.
+**Mỗi request sẽ có một token**. Mỗi token sẽ được gửi dưới dạng tiêu đề HTTP 
 
 Here's an infographic to explain the process:
 
