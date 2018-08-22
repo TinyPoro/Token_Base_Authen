@@ -9,7 +9,7 @@ TBA là luôn là 1 thứ đáng chú ý trên các trang web ngày nay. Với h
 
 Có vài yếu tố cực kỳ quan trọng khi phải quyết định  TBA cho ứng dụng của bạn. Những lý do chính cho các token là:
 
-Các server không trại thái và dễ mở rộng
+Các server không trạng thái và dễ mở rộng
 
 Tính sẵn dùng cho ứng dụng điện thoại 
 
@@ -19,7 +19,7 @@ Tăng cường bảo vệ
 
 ## Ai sẽ sử dụng Token Based Authentication?
 
-Phần lớn API hoặc ứng dụng web nào bạn biết đến dường như đều sử dụng các tokens . Một số ứng dụng như Fa và rất nhiều cebook, Twitter, Google+, GitHub, và nhiều ứng dụng khác sử dụng tokens
+Phần lớn API hoặc ứng dụng web nào bạn biết đến dường như đều sử dụng các tokens . Những ứng dụng như Facebook, Twitter, Google+, GitHub và rất nhiều cái khác sử dụng tokens
 
 Hãy xem cách thức hoạt dộng của chúng.
 
@@ -27,9 +27,9 @@ Hãy xem cách thức hoạt dộng của chúng.
 
 Trước khi chúng ta muốn xem cách hoạt động của token based authentication và ưu điểm của nó, chúng ta cần xem cách thức hoạt động authentication mà bạn đã làm trước đây. 
 
-### Máy chủ Based Authentication ( Phương thức truyền thống)
+### Xác thực dựa trên máy chủ ( Phương thức truyền thống)
 
-> Vì giao thức HTTP là _stateless_, nghĩa là nếu chúng ta xác thực một tài khoản với tên tài khoản và mật khẩu, tiếp theo là những yêu cầu, ứng dụng sẽ không nhận biết được chúng ta là ai. Chúng ta sẽ xác thực lại authenticate.
+> Vì giao thức HTTP là _stateless_, nghĩa là nếu chúng ta xác thực một tài khoản với tên tài khoản và mật khẩu, thì ở yêu cầu tiếp theo, ứng dụng sẽ không nhận biết được chúng ta là ai. Chúng ta sẽ phải xác thực lại.
 
 Phương pháp truyền thống để ứng dụng có thể ghi nhớ được chúng ta là ai là **lưu trữ thông tin người dùng đã đăng nhập trên máy chủ** .Có vài cách thực hiện khác nhau trong session, thường được lưu trữ trên đĩa hoặc trong bộ nhớ
 
@@ -61,7 +61,7 @@ Khái niệm này quan tâm đến nhiều vấn đề mà phải lưu trữ tr�
 
 Mặc dù việc triển khai có thể thay đổi, nhưng sẽ có những ý chính như sau:
 
-1. User Requests Access với tài khoản đăng nhập/ mật khẩu
+1. Truy cập yêu cầu người dùng với tài khoản đăng nhập/ mật khẩu
 2. Ứng dụng xác thực thông tin đăng nhập
 3. Ứng dụng cung cấp token đã đăng kí cho khách hàng 
 4. Khách hàng lưu lại token và gửi cùng với mọi request
