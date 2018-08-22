@@ -9,7 +9,7 @@ TBA là luôn là 1 thứ đáng chú ý trên các trang web ngày nay. Với h
 
 Có vài yếu tố cực kỳ quan trọng khi phải quyết định  TBA cho ứng dụng của bạn. Những lý do chính cho các token là:
 
-Các server không trại thái và dễ mở rộng
+Các server không trạng thái và dễ mở rộng
 
 Tính sẵn dùng cho ứng dụng điện thoại 
 
@@ -19,7 +19,7 @@ Tăng cường bảo vệ
 
 ## Ai sẽ sử dụng Token Based Authentication?
 
-Phần lớn API hoặc ứng dụng web nào bạn biết đến dường như đều sử dụng các tokens . Một số ứng dụng như Fa và rất nhiều cebook, Twitter, Google+, GitHub, và nhiều ứng dụng khác sử dụng tokens
+Phần lớn API hoặc ứng dụng web nào bạn biết đến dường như đều sử dụng các tokens . Một số ứng dụng như Facebook, Twitter, Google+, GitHub, và nhiều ứng dụng khác sử dụng tokens
 
 Hãy xem cách thức hoạt dộng của chúng.
 
@@ -29,25 +29,25 @@ Trước khi chúng ta muốn xem cách hoạt động của token based authent
 
 ### Máy chủ Based Authentication ( Phương thức truyền thống)
 
-> Vì giao thức HTTP là _stateless_, nghĩa là nếu chúng ta xác thực một tài khoản với tên tài khoản và mật khẩu, tiếp theo là những yêu cầu, ứng dụng sẽ không nhận biết được chúng ta là ai. Chúng ta sẽ xác thực lại authenticate.
+> Vì giao thức HTTP là _stateless_, nghĩa là nếu chúng ta xác thực một tài khoản với tên tài khoản và mật khẩu, ở request tiếp theo, ứng dụng sẽ không nhận biết được chúng ta là ai. Chúng ta sẽ phải xác thực lại authenticate.
 
 Phương pháp truyền thống để ứng dụng có thể ghi nhớ được chúng ta là ai là **lưu trữ thông tin người dùng đã đăng nhập trên máy chủ** .Có vài cách thực hiện khác nhau trong session, thường được lưu trữ trên đĩa hoặc trong bộ nhớ
 
 Dưới dây là một biểu đồ quy trình làm việc của máy chủ  based authentication sẽ như thế nào:
 
-Vì trang web, ứng dụng, và sự phát triển của ứng dụng di động  ngày 1 phát triển, phương pháp xác thực authentication này đã cho thấy những vấn đề, đặc biệt là khả năng mở rộng.
+Vì trang web, ứng dụng, và sự phát triển của ứng dụng di động ngày 1 phát triển, phương pháp xác thực authentication này đã cho thấy những vấn đề, đặc biệt là khả năng mở rộng.
 
 ## Những vấn đề với máy chủ Based Authentication
 
 Một vài vấn đề chính phát sinh với phương thức xác thực này.
 
-**Sessions**: Mỗi khi người dùng xác thực, máy chủ sẽ tạo ra một bản ghi ở đâu đó trên máy chủ của chúng tôi
+**Sessions**: Mỗi khi người dùng xác thực, máy chủ sẽ tạo ra một bản ghi ở đâu đó trên máy chủ của chúng ta. Điều này thường được thực hiện trên bộ nhớ, và khi có nhiều người dùng xác thực, chi phí cho máy chủ của bạn tăng lên.
 
 **Scalability**: Vì sessions được lưu trữ trong bộ nhớ, nó nảy sinh vấn đề với khả năng mở rộng. Vì những nhà cung cấp các dịch vụ đám mây bắt đầu tạo các bản sao máy chủ để xử lí việc tải ứng dụng, sẽ có những thông tin quan trọng trong bộ nhớ session sẽ giới hạn khả năng mở rộng của chúng ta.
 
 **CORS**: Khi chúng ta muốn mở rộng ứng dụng để cho phép dữ liệu có thể chạy trên nhiều thiết bị điện thoại, chúng tôi cảm thấy lo lắng về việc chia sẻ tài nguyên gốc(CORS). Khi sử dụng các lời gọi AJAX để lấy tài nguyên từ một domain khác(từ điện thoại đến máy chủ API), chúng ta có thể gặp vấn đề với những requests bị cấm.
 
-**CSRF**: Chúng tôi cũng sẽ bảo vệ chống lại [cross-site request forgery][1] (CSRF). Người dùng sẽ đễ bị CSRF tấn công bởi vì họ có thể đã xác thực với một trang web của ngân hàng và điều này có thể được tận dụng khi chúng ta truy cập các trang khác.
+**CSRF**: Chúng tôi cũng sẽ bảo vệ chống lại [cross-site request forgery][1] (CSRF). Người dùng sẽ dễ bị CSRF tấn công bởi vì họ có thể đã xác thực với một trang web của ngân hàng và điều này có thể được tận dụng khi chúng ta truy cập các trang khác.
 
 Với những vấn đề này, khả năng mở rộng là vấn đề chính, điều này tùy thuộc vào những cố gắng khác nhau.
 
@@ -55,7 +55,7 @@ Với những vấn đề này, khả năng mở rộng là vấn đề chính, 
 
 Token based authentication là **stateless**. Chúng tôi không lưu trữ bất kì thông tin nào về người dùng trên máy chủ hoặc trong session.
 
-Khái niệm này quan tâm đến nhiều vấn đề mà phải lưu trữ trên máy chủ.
+Khái niệm này quan tâm đến nhiều vấn đề  phát sinh khi lưu trữ trên máy chủ.
 
 >Không có  thông tin session này có nghĩa là ứng dụng của  bạn có thể mở rộng và cài thêm nhiều máy khi cần thiết mà không phải lo lắng người dùng sẽ đăng nhập ở đâu.
 
@@ -67,7 +67,7 @@ Mặc dù việc triển khai có thể thay đổi, nhưng sẽ có những ý 
 4. Khách hàng lưu lại token và gửi cùng với mọi request
 5. Máy chủ sẽ xác minh token và gửi lại phản hồi
 
-**Mỗi request sẽ yêu cầu một token**. Mỗi token sẽ được gửi trong header HTTP  để chúng ta duy trì ý tưởng stateless HTTP requests. Chúng ta cũng cần đặt máy chủ của chúng ta chấp nhận các request từ tất cả các domain sử dụng  `Access-Control-Allow-Origin: *` Điều tuyệt vời của việc  sử dụng `*` trong ACAO header là nó không cho phép các reuquest để cung cấp các thông tin xác thực như xác thực HTTP, SSL certificates bên người dùng, hay cookie
+**Mỗi request sẽ yêu cầu một token**. Mỗi token sẽ được gửi trong header HTTP  để chúng ta duy trì tư tưởng stateless của HTTP requests. Chúng ta cũng cần đặt máy chủ của chúng ta chấp nhận các request từ tất cả các domain sử dụng  `Access-Control-Allow-Origin: *` Điều tuyệt vời của việc  sử dụng `*` trong ACAO header là nó không cho phép các reuquest để cung cấp các thông tin xác thực như xác thực HTTP, SSL certificates bên người dùng, hay cookie
 
 
 Dưới đây là 1 minh họa để giải thích quá trình trên
@@ -105,9 +105,9 @@ Khi chúng ta đăng nhập Twitter qua 1 dịch vụ ( như Buffer), chúng ta 
 Bằng cách sử dụng token, đây là cách chúng ta ** cung cấp những quyền được lựa chọn đến ứng dụng bên thứ ba**. Chúng ta thậm chí có thể xây dựng  API của riêng chúng ta và trao những token quyền đặc biệt nếu người dùng của chúng ta muốn trao quyền đến dữ liệu của họ đến ứng dụng khác.
 ### Multiple Platforms and Domains
 
-Chúng ta đã nói 1 chút về CORS ở bên trên. Khi ứng dụng và dịch vụ của chúng ta phát triển, chúng ta sẽ cần chúng cấp quyền truy cập đến tất cả các loại thiết bị và ứng dụng(vì ứng dụng của  chúng ta sẽ trở nên phổ biến!)
+Chúng ta đã nói 1 chút về CORS ở bên trên. Khi ứng dụng và dịch vụ của chúng ta phát triển, chúng ta sẽ cần chúng cấp quyền truy cập đến tất cả các loại thiết bị và ứng dụng (vì ứng dụng của chúng ta sẽ trở nên phổ biến!)
 
-Sử dụng API để phục vụ dữ liệu, chúng ta cũng có thể  có những lựa chọn thiết kế để phục vụ asets từ 1 CDN.  Điều này sẽ loại bỏ vấn đề CORS mang lại sau khi chúng ta thiết lập cấu hình header nhanh cho ứng dụng của chúng ta.
+Sử dụng API để phục vụ dữ liệu, chúng ta cũng có thể  có những lựa chọn thiết kế để phân phối nội dung qua CDN.  Điều này sẽ loại bỏ vấn đề CORS mang lại sau khi chúng ta thiết lập cấu hình header nhanh cho ứng dụng của chúng ta.
     
     
     Access-Control-Allow-Origin: *
@@ -123,7 +123,7 @@ Biểu đồ thư viện và trình gỡ lỗi tiện dụng này hiển thị h
 
 ## Tổng kết
 
-Đây chỉ là cài nhìn tổng quan về cách thức và lý do của token based authentication. Như 1 lẽ thường tình trong thế giới an ninh, có cực nhiều(quá nhiều?) thứ về mỗi chủ đề và nó thay đổi theo từng trường hợp sử dụng. Thậm chí, chúng tôi còn nghiên cứu một số chủ đề về khả năng mở rộng cũng đáng để nói
+Đây chỉ là cài nhìn tổng quan về cách thức và lý do của token based authentication. Như 1 lẽ thường tình trong thế giới bảo mật, có cực nhiều(quá nhiều?) thứ về mỗi chủ đề và nó thay đổi theo từng trường hợp sử dụng. Thậm chí, chúng tôi còn nghiên cứu một số chủ đề về khả năng mở rộng cũng đáng để nói
 
 Đây là một bài tổng quan cực nhanh, vì vậy xin vui lòng chỉ ra bất cứ điều gì đã bị bỏ lỡ hoặc bất kỳ câu hỏi nào bạn có về vấn đề này.
 
